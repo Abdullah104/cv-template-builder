@@ -641,14 +641,22 @@
   \vspace{-2.0mm}
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+  \begin{tabular*}{\textwidth}{@{}l@{}}
     \ifempty{#2#3}
-      {\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
-      {\entrytitlestyle{#2} & \entrylocationstyle{#3} \\
-      \entrypositionstyle{#1} & \entrydatestyle{#4} \\}
+      {\entrypositionstyle{#1}, \entrydatestyle{#4} \\}
+      {
+        \entrytitlestyle{#2} \\
+        \entrypositionstyle{#1} \\
+        \ifstrempty{#3#4}{}{
+          \ifstrempty{#3}
+            {\entrydatestyle{#4}}
+            {\entrylocationstyle{#3}\ifstrempty{#4}{}{, \entrydatestyle{#4}}}
+          \\
+        }
+      }
     \ifstrempty{#5}
       {}
-      {\multicolumn{2}{L{\textwidth}}{\descriptionstyle{#5}} \\}
+      {\multicolumn{1}{p{\textwidth}}{\descriptionstyle{#5}} \\}
   \end{tabular*}%
 }
 
@@ -663,16 +671,27 @@
 \newcommand*{\cvsubentry}[4]{%
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+  \begin{tabular*}{\textwidth}{@{}l@{}}
     \setlength\leftskip{0.2cm}
-    \subentrytitlestyle{#2} & \ifthenelse{\equal{#1}{}}
-      {\subentrydatestyle{#3}}{}
-    \ifthenelse{\equal{#1}{}}
-      {}
-      {\subentrypositionstyle{#1} & \subentrydatestyle{#3} \\}
-    \ifthenelse{\equal{#4}{}}
-      {}
-      {\multicolumn{2}{L{17.0cm}}{\subdescriptionstyle{#4}} \\}
+    \newbool{firstitem}
+    \setbool{firstitem}{true}
+    \ifstrempty{#2}{}{%
+      \subentrytitlestyle{#2}%
+      \setbool{firstitem}{false}
+    }
+    \ifstrempty{#1}{}{%
+      \ifbool{firstitem}{}{\unskip, }%
+      \subentrypositionstyle{#1}%
+      \setbool{firstitem}{false}
+    }
+    \ifstrempty{#3}{}{%
+      \ifbool{firstitem}{}{\unskip, }%
+      \subentrydatestyle{#3}%
+    }
+    \\
+    \ifstrempty{#4}{}{%
+      \multicolumn{1}{p{\textwidth}}{\subdescriptionstyle{#4}}%
+    }
   \end{tabular*}
 }
 
@@ -683,7 +702,7 @@
   \begin{center}
     \setlength\tabcolsep{0pt}
     \setlength{\extrarowheight}{0pt}
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{1.5cm} L{\textwidth - 4.0cm} R{2.5cm}}
+    \begin{tabular*}{\textwidth}{@{}l@{}}
 }{%
     \end{tabular*}
   \end{center}
@@ -691,7 +710,27 @@
 % Define a line of cv information(honor, award or something else)
 % Usage: \cvhonor{<position>}{<title>}{<location>}{<date>}
 \newcommand*{\cvhonor}[4]{%
-  \honordatestyle{#4} & \honorpositionstyle{#1}\ifempty{#2}{}{,} \honortitlestyle{#2} & \honorlocationstyle{#3} \\
+  \newbool{firstitem}
+  \setbool{firstitem}{true}
+  \ifstrempty{#1}{}{%
+    \honorpositionstyle{#1}%
+    \setbool{firstitem}{false}
+  }
+  \ifstrempty{#2}{}{%
+    \ifbool{firstitem}{}{\unskip, }%
+    \honortitlestyle{#2}%
+    \setbool{firstitem}{false}
+  }
+  \ifstrempty{#3}{}{%
+    \ifbool{firstitem}{}{\unskip, }%
+    \honorlocationstyle{#3}%
+    \setbool{firstitem}{false}
+  }
+  \ifstrempty{#4}{}{%
+    \ifbool{firstitem}{}{\unskip, }%
+    \honordatestyle{#4}%
+  }
+  \\
 }
 
 % Define an environment for cvskill
@@ -701,7 +740,7 @@
   \begin{center}
     \setlength\tabcolsep{1ex}
     \setlength{\extrarowheight}{0pt}
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} r L{\textwidth * \real{0.9}}}
+    \begin{tabular*}{\textwidth}{@{}l@{}}
 }{%
     \end{tabular*}
   \end{center}
@@ -709,7 +748,7 @@
 % Define a line of cv information(skill)
 % Usage: \cvskill{<type>}{<skillset>}
 \newcommand*{\cvskill}[2]{%
-	\skilltypestyle{#1} & \skillsetstyle{#2} \\
+	\skilltypestyle{#1}: \skillsetstyle{#2} \\
 }
 
 % Define an environment for cvitems(for cventry)
@@ -752,8 +791,9 @@
   \vspace{8.4mm}
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
-    \recipienttitlestyle{\@recipientname} & \letterdatestyle{\@letterdate}
+  \begin{tabular*}{\textwidth}{@{}l@{}}
+    \recipienttitlestyle{\@recipientname} \\
+    \letterdatestyle{\@letterdate}
   \end{tabular*}
   \begin{singlespace}
     \recipientaddressstyle{\@recipientaddress} \\\\
