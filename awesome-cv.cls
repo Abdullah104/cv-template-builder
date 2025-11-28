@@ -723,7 +723,7 @@
   }
   \ifstrempty{#3}{}{%
     \ifbool{firstitem}{}{\unskip, }%
-    \honortitlestyle{Credential ID: #3}%
+    \honortitlestyle{#3}%
     \setbool{firstitem}{false}
   }
   \ifstrempty{#4}{}{%
