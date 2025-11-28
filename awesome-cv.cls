@@ -733,6 +733,44 @@
   \\
 }
 
+% Define an environment for cvcertificate
+\newenvironment{cvcertificates}{%
+  \vspace{\acvSectionContentTopSkip}
+  \vspace{-2mm}
+  \begin{center}
+    \setlength\tabcolsep{0pt}
+    \setlength{\extrarowheight}{0pt}
+    \begin{tabular*}{\textwidth}{@{}l@{}}
+}{%
+    \end{tabular*}
+  \end{center}
+}
+% Define a line of cv information(certificate)
+% Usage: \cvcertificate{<name>}{<date>}{<issuer>}{<credential>}
+\newcommand*{\cvcertificate}[4]{%
+  \newbool{firstitem}
+  \setbool{firstitem}{true}
+  \ifstrempty{#1}{}{%
+    \honorpositionstyle{#1}%
+    \setbool{firstitem}{false}
+  }
+  \ifstrempty{#2}{}{%
+    \ifbool{firstitem}{}{\unskip, }%
+    \honortitlestyle{#2}%
+    \setbool{firstitem}{false}
+  }
+  \ifstrempty{#3}{}{%
+    \ifbool{firstitem}{}{\unskip, }%
+    \honortitlestyle{#3}%
+    \setbool{firstitem}{false}
+  }
+  \ifstrempty{#4}{}{%
+    \ifbool{firstitem}{}{\unskip, }%
+    \honordatestyle{{\bfseries Credential ID:} #4}%
+  }
+  \\
+}
+
 % Define an environment for cvskill
 \newenvironment{cvskills}{%
   \vspace{\acvSectionContentTopSkip}
